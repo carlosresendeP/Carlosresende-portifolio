@@ -11,9 +11,9 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: 40, suffix: '+', label: 'Projetos Entregues', description: 'Do simples ao complexo' },
-  { value: 2, suffix: '+', label: 'Anos de Experiência', description: 'Em constante evolução' },
-  { value: 30, suffix: '+', label: 'Clientes Satisfeitos', description: 'Relacionamento duradouro' },
+  { value: 10, suffix: '+', label: 'Projetos Entregues', description: 'Do simples ao complexo' },
+  { value: 1, suffix: '+', label: 'Anos de Experiência', description: 'Em constante evolução' },
+  { value: 10, suffix: '+', label: 'Clientes Satisfeitos', description: 'Relacionamento duradouro' },
   { value: 100, suffix: '%', label: 'Dedicação', description: 'Em cada projeto' },
 ]
 
@@ -53,7 +53,7 @@ function Counter({ value, suffix }: { value: number; suffix: string }) {
 
 export default function Stats() {
   return (
-    <section id="stats" className="py-10 relative overflow-hidden border-y border-border">
+    <section id="stats" className="py-4 relative overflow-hidden border-y border-border">
       {/* Background sutil */}
       <div className="absolute inset-0 bg-linear-to-r from-primary/5 via-transparent to-tertiary/5" />
 
@@ -68,10 +68,10 @@ export default function Stats() {
               transition={{ duration: 0.5, delay: i * 0.12 }}
               className="flex flex-col items-center text-center lg:px-10 gap-2 group"
             >
-              <span className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary tabular-nums">
+              <span className="text-2xl md:text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary tabular-nums">
                 <Counter value={stat.value} suffix={stat.suffix} />
               </span>
-              <p className="text-base font-semibold text-foreground">{stat.label}</p>
+              <p className="text-sm font-semibold text-foreground">{stat.label}</p>
               <p className="text-xs text-muted-foreground">{stat.description}</p>
             </motion.div>
           ))}

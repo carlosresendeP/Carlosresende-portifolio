@@ -2,81 +2,94 @@
 
 import { motion } from 'motion/react'
 import {
-  FaReact, FaNodeJs, FaGitAlt, FaFigma, FaDatabase, FaHtml5, FaCss3Alt,
+  FaReact, FaNodeJs, FaGitAlt, FaFigma, FaDatabase, FaHtml5, FaCss3Alt,FaVuejs 
 } from 'react-icons/fa'
 import {
   SiTypescript, SiNextdotjs, SiTailwindcss, SiMongodb,
-  SiPostgresql, SiPrisma, SiN8N, SiDocker,
+  SiPostgresql, SiPrisma, SiN8N, SiDocker, SiJavascript,
+  SiVite,
 } from 'react-icons/si'
-import { TbBrandVite } from 'react-icons/tb'
 
 interface Skill {
   name: string
-  icon: React.ReactNode
-  level: 'Básico' | 'Intermediário' | 'Avançado'
+  icon: React.ElementType
   pct: number
+  /** Cor brand real da tecnologia (Tailwind inline style) */
+  brandColor: string
 }
 
-interface SkillCategory {
-  title: string
-  color: string
-  skills: Skill[]
-}
-
-const categories: SkillCategory[] = [
-  {
-    title: 'Frontend',
-    color: 'from-primary to-primary/60',
-    skills: [
-      { name: 'React', icon: <FaReact />, level: 'Avançado', pct: 90 },
-      { name: 'Next.js', icon: <SiNextdotjs />, level: 'Avançado', pct: 85 },
-      { name: 'TypeScript', icon: <SiTypescript />, level: 'Intermediário', pct: 70 },
-      { name: 'Tailwind CSS', icon: <SiTailwindcss />, level: 'Avançado', pct: 90 },
-      { name: 'HTML5', icon: <FaHtml5 />, level: 'Avançado', pct: 95 },
-      { name: 'CSS3', icon: <FaCss3Alt />, level: 'Avançado', pct: 90 },
-    ],
-  },
-  {
-    title: 'Backend',
-    color: 'from-secondary to-secondary/60',
-    skills: [
-      { name: 'Node.js', icon: <FaNodeJs />, level: 'Intermediário', pct: 70 },
-      { name: 'MongoDB', icon: <SiMongodb />, level: 'Intermediário', pct: 65 },
-      { name: 'PostgreSQL', icon: <SiPostgresql />, level: 'Básico', pct: 45 },
-      { name: 'Prisma', icon: <SiPrisma />, level: 'Intermediário', pct: 60 },
-      { name: 'Docker', icon: <SiDocker />, level: 'Básico', pct: 35 },
-    ],
-  },
-  {
-    title: 'Design & Tools',
-    color: 'from-tertiary to-tertiary/60',
-    skills: [
-      { name: 'Git', icon: <FaGitAlt />, level: 'Intermediário', pct: 75 },
-      { name: 'Figma', icon: <FaFigma />, level: 'Básico', pct: 40 },
-      { name: 'Vite', icon: <TbBrandVite />, level: 'Avançado', pct: 85 },
-      { name: 'n8n / IA', icon: <SiN8N />, level: 'Básico', pct: 40 },
-      { name: 'SQL', icon: <FaDatabase />, level: 'Intermediário', pct: 60 },
-    ],
-  },
+const skills: Skill[] = [
+  { name: 'HTML5',       icon: FaHtml5,       pct: 95, brandColor: '#E34F26' },
+  { name: 'CSS3',        icon: FaCss3Alt,     pct: 90, brandColor: '#1572B6' },
+  { name: 'React',       icon: FaReact,       pct: 90, brandColor: '#61DAFB' },
+  { name: 'Next.js',     icon: SiNextdotjs,   pct: 85, brandColor: '#FFFFFF' },
+  { name: 'TypeScript',  icon: SiTypescript,  pct: 70, brandColor: '#3178C6' },
+  { name: 'JavaScript',  icon: SiJavascript,  pct: 90, brandColor: '#F7DF1E' },
+  { name: 'Tailwind',    icon: SiTailwindcss, pct: 90, brandColor: '#06B6D4' },
+  { name: 'Vue.js',      icon: FaVuejs,       pct: 85, brandColor: '#17e75c' },
+  { name: 'Vite',        icon: SiVite,        pct: 85, brandColor: '#646CFF' },
+  { name: 'Node.js',     icon: FaNodeJs,      pct: 70, brandColor: '#339933' },
+  { name: 'MongoDB',     icon: SiMongodb,     pct: 65, brandColor: '#47A248' },
+  { name: 'PostgreSQL',  icon: SiPostgresql,  pct: 45, brandColor: '#4169E1' },
+  { name: 'Prisma',      icon: SiPrisma,      pct: 60, brandColor: '#2D3748' },
+  { name: 'Docker',      icon: SiDocker,      pct: 35, brandColor: '#2496ED' },
+  { name: 'Git',         icon: FaGitAlt,      pct: 75, brandColor: '#F05032' },
+  { name: 'Figma',       icon: FaFigma,       pct: 40, brandColor: '#F24E1E' },
+  { name: 'n8n / IA',   icon: SiN8N,         pct: 40, brandColor: '#EA4B71' },
+  { name: 'SQL',         icon: FaDatabase,    pct: 60, brandColor: '#00758F' },
 ]
 
-const levelColor: Record<Skill['level'], string> = {
-  Avançado: 'text-primary border-primary/30 bg-primary/10',
-  Intermediário: 'text-secondary border-secondary/30 bg-secondary/10',
-  Básico: 'text-muted-foreground border-border bg-muted/30',
-}
+function SkillCard({ skill, index }: { skill: Skill; index: number }) {
+  const Icon = skill.icon
 
-function SkillBar({ pct, color }: { pct: number; color: string }) {
   return (
-    <div className="h-1.5 w-full rounded-full bg-muted overflow-hidden">
-      <motion.div
-        className={`h-full rounded-full bg-linear-to-r ${color}`}
-        initial={{ width: 0 }}
-        whileInView={{ width: `${pct}%` }}
-        viewport={{ once: true }}
-        transition={{ duration: 1, ease: 'easeOut', delay: 0.2 }}
-      />
-    </div>
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.4, delay: index * 0.05 }}
+      className="group flex flex-col items-center gap-3 p-5 rounded-2xl
+                 bg-card border border-border
+                 hover:border-[var(--brand)] hover:bg-card/80
+                 transition-all duration-300 cursor-default"
+      style={{ '--brand': skill.brandColor } as React.CSSProperties}
+    >
+      {/* Ícone */}
+      <div
+        className="text-4xl text-muted-foreground/50 transition-colors duration-300 group-hover:text-[var(--brand)]"
+        style={{ filter: 'drop-shadow(0 0 0px transparent)' }}
+      >
+        <Icon
+          className="transition-[color,filter] duration-300 group-hover:[filter:drop-shadow(0_0_8px_var(--brand))]"
+          aria-label={skill.name}
+        />
+      </div>
+
+      {/* Nome */}
+      <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-300 text-center leading-tight">
+        {skill.name}
+      </span>
+
+      {/* Percentagem */}
+      <div className="w-full space-y-1">
+        <div className="flex justify-center">
+          <span className="text-[11px] font-mono text-muted-foreground/70 group-hover:text-[var(--brand)] transition-colors duration-300">
+            {skill.pct}%
+          </span>
+        </div>
+        {/* Barra de progresso */}
+        <div className="h-1 w-full rounded-full bg-muted overflow-hidden">
+          <motion.div
+            className="h-full rounded-full"
+            style={{ backgroundColor: skill.brandColor, opacity: 0.4 }}
+            initial={{ width: 0 }}
+            whileInView={{ width: `${skill.pct}%` }}
+            viewport={{ once: true }}
+            transition={{ duration: 1, ease: 'easeOut', delay: 0.3 + index * 0.04 }}
+          />
+        </div>
+      </div>
+    </motion.div>
   )
 }
 
@@ -88,6 +101,7 @@ export default function Skills() {
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-tertiary/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
+        {/* Cabeçalho */}
         <div className="text-center mb-16 flex flex-col items-center gap-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20 w-fit">
             <span className="text-xs font-mono text-secondary uppercase tracking-wider">Stack Técnico</span>
@@ -100,40 +114,12 @@ export default function Skills() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {categories.map((cat, ci) => (
-            <motion.div
-              key={ci}
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: ci * 0.15 }}
-              className="p-6 rounded-2xl bg-card border border-border hover:border-primary/30 transition-all duration-300"
-            >
-              <div className="flex items-center gap-3 mb-6">
-                <div className={`h-1 w-8 rounded-full bg-linear-to-r ${cat.color}`} />
-                <h3 className="text-sm font-mono text-muted-foreground uppercase tracking-widest">
-                  {cat.title}
-                </h3>
-              </div>
-
-              <div className="space-y-5">
-                {cat.skills.map((skill, si) => (
-                  <div key={si} className="space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2 text-foreground text-sm font-medium">
-                        <span className="text-base opacity-70">{skill.icon}</span>
-                        {skill.name}
-                      </div>
-                      <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full border ${levelColor[skill.level]}`}>
-                        {skill.level}
-                      </span>
-                    </div>
-                    <SkillBar pct={skill.pct} color={cat.color} />
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+        {/* Grid de cards centralizado */}
+        <div className="flex flex-wrap justify-center gap-3">
+          {skills.map((skill, i) => (
+            <div key={skill.name} className="w-[calc(33%-0.5rem)] sm:w-28 md:w-28">
+              <SkillCard skill={skill} index={i} />
+            </div>
           ))}
         </div>
       </div>

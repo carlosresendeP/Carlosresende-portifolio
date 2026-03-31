@@ -48,15 +48,15 @@ export const Header = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className={cn(
-        'fixed top-0 left-0 w-full z-50 transition-all duration-300',
+        'fixed w-[80%] top-3 left-1/2 -translate-x-1/2 z-50 py-3 px-2 rounded-full transition-all duration-300',
         isScrolled
-          ? 'py-3 bg-background/80 backdrop-blur-xl border-b border-border shadow-sm'
-          : 'py-5 bg-transparent'
+          ? 'bg-card/30 backdrop-blur-xl shadow-lg shadow-primary/20'
+          : 'py-5 bg-card shadow-primary/10'
       )}
     >
       <div className="container mx-auto px-6 flex items-center justify-between gap-6">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2 group flex-shrink-0">
+        <a href="#" className="flex items-center gap-2 group shrink-0">
           <Terminal size={22} className="text-primary group-hover:rotate-12 transition-transform duration-300" />
           <span className="font-bold text-lg tracking-tighter">
             CARLOS<span className="text-primary">.RESENDE</span>

@@ -22,20 +22,20 @@ export default function About() {
             transition={{ duration: 0.8, ease: 'easeOut' }}
             className="relative"
           >
-            <div className="relative aspect-square max-w-md mx-auto lg:mx-0 overflow-hidden rounded-2xl border border-border group">
+            <div className="relative h-screen max-w-lg mx-auto lg:mx-0 overflow-hidden rounded-2xl border border-border group">
               <Image
                 src="/carlos.png"
                 alt="Carlos Resende"
                 fill
                 sizes="(max-width: 768px) 100vw, 448px"
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover h-full transition-transform duration-500 group-hover:scale-105"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-background/20 group-hover:bg-transparent transition-colors duration-500" />
             </div>
 
             {/* Badge flutuante */}
-            <div className="absolute -bottom-4 -right-4 px-4 py-3 rounded-2xl bg-card border border-border shadow-xl backdrop-blur-sm">
+            <div className="absolute -bottom-4  px-4 py-3 rounded-2xl bg-card border border-border shadow-xl backdrop-blur-sm">
               <p className="text-xs font-mono text-muted-foreground uppercase tracking-widest mb-0.5">Status</p>
               <div className="flex items-center gap-2">
                 <span className="relative flex size-2">
