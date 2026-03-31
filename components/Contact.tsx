@@ -18,6 +18,7 @@ import {
   DialogDescription,
 } from '@/components/ui/dialog'
 import { toast } from 'sonner'
+import { SocialLink } from '@/types/sociaTypes'
 
 interface FormState {
   name: string
@@ -27,6 +28,14 @@ interface FormState {
 }
 
 export default function Contact() {
+
+  const socialLinks: SocialLink[] = [
+    { icon: FaGithub, href: 'https://github.com/carlosresendeP', label: 'GitHub' },
+    { icon: FaLinkedin, href: 'https://www.linkedin.com/in/carlos-paula2001/', label: 'LinkedIn' },
+    { icon: FaInstagram, href: 'https://www.instagram.com/dev_carlosresende/', label: 'Instagram' },
+    { icon: FaWhatsapp, href: 'https://wa.me/5532998283189', label: 'WhatsApp' },
+  ]
+
   const [form, setForm] = useState<FormState>({ name: '', email: '', subject: 'Landing Page', message: '' })
   const [loading, setLoading] = useState(false)
   const [successOpen, setSuccessOpen] = useState(false)
@@ -78,11 +87,11 @@ export default function Contact() {
           >
             {[
               { icon: Mail, label: 'E-mail', value: 'contato@carlosresende.com.br', href: 'mailto:contato@carlosresende.com.br' },
-              { icon: Phone, label: 'WhatsApp', value: '+55 (32) 99828-3189', href: 'https://wa.me/5532998283189' },
+              { icon: Phone, label: 'WhatsApp', value: '+55 (32) *****-****', href: 'https://wa.me/5532998283189' },
               { icon: MapPin, label: 'Localização', value: 'Juiz de Fora, MG — Brasil', href: undefined },
             ].map(({ icon: Icon, label, value, href }) => (
               <div key={label} className="flex items-center gap-5 group">
-                <div className="size-14 rounded-2xl bg-muted flex items-center justify-center border border-border group-hover:border-primary/50 transition-colors flex-shrink-0">
+                <div className="size-14 rounded-2xl bg-muted flex items-center justify-center border border-border group-hover:border-primary/50 transition-colors shrink-0">
                   <Icon size={22} className="text-primary" />
                 </div>
                 <div>
@@ -108,19 +117,14 @@ export default function Contact() {
             <div>
               <p className="text-muted-foreground mb-4 text-sm">Redes sociais:</p>
               <div className="flex gap-3">
-                {[
-                  { icon: FaGithub, href: 'https://github.com/carlosresendeP', label: 'GitHub' },
-                  { icon: FaLinkedin, href: 'https://linkedin.com/in/carlos-resende-dev', label: 'LinkedIn' },
-                  { icon: FaInstagram, href: 'https://instagram.com', label: 'Instagram' },
-                  { icon: FaWhatsapp, href: 'https://wa.me/5532998283189', label: 'WhatsApp' },
-                ].map(({ icon: Icon, href, label }) => (
+                {socialLinks.map(({ icon: Icon, href, label }: SocialLink) => (
                   <a
                     key={label}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={label}
-                    className="size-12 rounded-xl bg-muted flex items-center justify-center border border-border hover:border-primary/50 hover:text-primary hover:bg-primary/5 transition-all duration-300"
+                    className="size-12 rounded-xl bg-muted flex items-center justify-center border border-border hover:border-accent/50 hover:bg-accent/50 hover:text-foreground  transition-all duration-300"
                   >
                     <Icon size={20} />
                   </a>
@@ -175,13 +179,13 @@ export default function Contact() {
                       name="subject"
                       value={form.subject}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 rounded-lg bg-input border border-input focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm text-foreground"
+                      className="w-full px-3 py-2 rounded-lg bg-background border border-input focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm text-foreground"
                     >
-                      <option>Landing Page</option>
-                      <option>Business Pro</option>
-                      <option>SaaS Customizado</option>
-                      <option>Automação com IA</option>
-                      <option>Outro</option>
+                      <option value="Landing Page">Landing page</option>
+                      <option value="Business Pro">Site Institucional</option>
+                      <option value="SaaS Customizado">Sistema com IA</option>
+                      <option value="Automação com IA">SaaS Customizado</option>
+                      <option value="Outro">Outro</option>
                     </select>
                   </div>
 

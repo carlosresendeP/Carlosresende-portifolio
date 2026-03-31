@@ -71,8 +71,8 @@ function FaqItemComponent({ item, index }: { item: FaqItem; index: number }) {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            className="overflow-hidden"
+            transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+            style={{ overflow: 'hidden' }}
           >
             <div className="px-5 pb-5 pt-1">
               <p className="text-sm text-muted-foreground leading-relaxed border-t border-border pt-4">
@@ -92,14 +92,14 @@ export default function FAQ() {
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-tertiary/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
+        <div className="grid lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-12 lg:gap-16 items-start">
           {/* Lado esquerdo: título + contato */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
-            className="lg:sticky lg:top-32"
+            className="flex flex-col justify-start items-start lg:sticky lg:top-32"
           >
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-tertiary/10 border border-tertiary/20 mb-6">
               <span className="text-xs font-mono text-tertiary uppercase tracking-wider">FAQ</span>
@@ -130,7 +130,7 @@ export default function FAQ() {
           </motion.div>
 
           {/* Lado direito: accordion */}
-          <div className="space-y-3">
+          <div className="space-y-3 min-w-0">
             {faqData.map((item, i) => (
               <FaqItemComponent key={i} item={item} index={i} />
             ))}

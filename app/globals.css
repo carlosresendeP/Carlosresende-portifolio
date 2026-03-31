@@ -119,8 +119,18 @@
     @apply bg-background text-foreground;
   }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
+    scroll-padding-top: 5rem;
   }
+}
+
+/* Smooth scroll global */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overscroll-behavior-y: none;
 }
 
 /* ColorBends container */

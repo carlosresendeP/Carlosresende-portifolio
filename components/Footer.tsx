@@ -1,7 +1,8 @@
 import { Terminal } from 'lucide-react'
 import { FaGithub, FaLinkedin, FaInstagram, FaWhatsapp } from 'react-icons/fa'
+import { FooterLink, SocialLink } from '@/types/sociaTypes'
 
-const footerLinks = [
+const footerLinks: FooterLink[] = [
   { name: 'Serviços', href: '#services' },
   { name: 'Projetos', href: '#portfolio' },
   { name: 'Preços', href: '#pricing' },
@@ -9,10 +10,10 @@ const footerLinks = [
   { name: 'Contato', href: '#contact' },
 ]
 
-const socialLinks = [
+const socialLinks: SocialLink[] = [
   { icon: FaGithub, href: 'https://github.com/carlosresendeP', label: 'GitHub' },
-  { icon: FaLinkedin, href: 'https://linkedin.com/in/carlos-resende-dev', label: 'LinkedIn' },
-  { icon: FaInstagram, href: 'https://instagram.com', label: 'Instagram' },
+  { icon: FaLinkedin, href: 'https://www.linkedin.com/in/carlos-paula2001/', label: 'LinkedIn' },
+  { icon: FaInstagram, href: 'https://www.instagram.com/dev_carlosresende/', label: 'Instagram' },
   { icon: FaWhatsapp, href: 'https://wa.me/5532998283189', label: 'WhatsApp' },
 ]
 
@@ -32,7 +33,7 @@ export const Footer = () => {
               </span>
             </a>
             <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
-              Desenvolvedor full-stack criando soluções digitais modernas, escaláveis e de alta performance.
+              Desenvolvedor full-stack criando soluções digitais modernas e de alta performance.
             </p>
             {/* Social links */}
             <div className="flex gap-3 mt-1">
@@ -43,7 +44,7 @@ export const Footer = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center border border-border hover:border-primary/50 hover:text-primary transition-all duration-300 text-sm"
+                  className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center border border-border hover:border-accent/50 hover:bg-accent/ hover:text-foreground transition-all duration-300 text-sm"
                 >
                   <Icon size={15} />
                 </a>
@@ -78,7 +79,7 @@ export const Footer = () => {
               href="https://wa.me/5532998283189?text=Ol%C3%A1! Gostaria de um or%C3%A7amento gratuito."
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-primary/20 transition-colors text-sm font-medium"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary/10 border border-primary/20 text-primary hover:bg-accent/20 hover:border-accent hover:text-foreground transition-colors text-sm font-medium"
             >
               <FaWhatsapp size={14} />
               Orçamento Gratuito
@@ -89,7 +90,7 @@ export const Footer = () => {
         {/* Bottom */}
         <div className="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-muted-foreground">
           <p>© {year} Carlos Resende — Todos os direitos reservados.</p>
-          <p>Construído com <span className="text-primary">Next.js</span> & <span className="text-secondary">Tailwind CSS</span></p>
+          <p>Construído com <span className="text-primary">Next.js</span></p>
         </div>
       </div>
     </footer>
