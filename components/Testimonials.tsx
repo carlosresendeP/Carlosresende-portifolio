@@ -106,7 +106,7 @@ export default function Testimonials() {
                       {/* Quote decorativo */}
                       <Quote
                         size={80}
-                        className="absolute top-4 right-4 text-primary/5 rotate-180 pointer-events-none"
+                        className="absolute top-4 right-5 text-primary/5 rotate-180 pointer-events-none"
                       />
 
                       {/* Stars */}
@@ -125,7 +125,7 @@ export default function Testimonials() {
 
                       {/* Autor */}
                       <div className="flex items-center gap-4">
-                        <div className={`size-12 rounded-full bg-linear-to-br ${t.color} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
+                        <div className={`size-12 rounded-full bg-linear-to-br ${t.color} flex items-center justify-center text-white font-bold text-sm shrink-0`}>
                           {t.initials}
                         </div>
                         <div>
@@ -142,8 +142,8 @@ export default function Testimonials() {
               ))}
             </CarouselContent>
 
-            <CarouselPrevious className="border-border text-foreground hover:bg-muted -left-4 md:-left-8" />
-            <CarouselNext className="border-border text-foreground hover:bg-muted -right-4 md:-right-8" />
+            <CarouselPrevious className="border-border text-foreground hover:bg-muted -left-6 md:-left-13" />
+            <CarouselNext className="border-border text-foreground hover:bg-muted -right-6 md:-right-13" />
           </Carousel>
 
           {/* Dots */}

@@ -3,8 +3,15 @@
 import { motion } from 'motion/react'
 import Image from 'next/image'
 import { ArrowRight, Download } from 'lucide-react'
+import { Button } from './ui/button'
+
 
 export default function About() {
+
+  const skills: string[] = [
+    'HTML', 'CSS', 'JavaScript','TypeScript', 'React', 'Next.js', 'Node.js', 'Tailwind', 'MongoDB', 'PostgreSQL', 'Vue.js', 'prisma ORM', 'Docker','Git', 'IA'
+  ] 
+
   return (
     <section id="about" className="py-24 bg-background relative overflow-hidden">
       {/* Decoração */}
@@ -69,32 +76,16 @@ export default function About() {
 
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
               <p>
-                Olá! Sou o Carlos, desenvolvedor full-stack apaixonado por transformar problemas complexos em interfaces simples e intuitivas. Foco em performance, escalabilidade e experiência do usuário.
+                Olá! Sou o Carlos, desenvolvedor full-stack apaixonado por transformar interfaces simples e intuitivas. Foco em performance, escalabilidade e experiência do usuário.
               </p>
               <p>
-                Minha jornada começou com curiosidade sobre como a web funciona. Hoje construo aplicações robustas com o ecossistema moderno de JavaScript — do front-end ao back-end.
+                Minha jornada começou com curiosidade sobre como a web funciona. Hoje construo aplicações robustas com o ecossistema moderno de JavaScript, do front-end ao back-end.
               </p>
-            </div>
-
-            {/* Métricas */}
-            <div className="grid grid-cols-3 gap-6 py-6 border-y border-border">
-              <div className="text-center">
-                <h4 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-primary to-secondary">40+</h4>
-                <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Projetos</p>
-              </div>
-              <div className="text-center">
-                <h4 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-secondary to-tertiary">2+</h4>
-                <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Anos</p>
-              </div>
-              <div className="text-center">
-                <h4 className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-tertiary to-primary">30+</h4>
-                <p className="text-xs text-muted-foreground uppercase tracking-widest mt-1">Clientes</p>
-              </div>
             </div>
 
             {/* Tags de skills */}
             <div className="flex flex-wrap gap-2">
-              {['React', 'Next.js', 'Node.js', 'TypeScript', 'Tailwind', 'MongoDB'].map((skill) => (
+              {skills.map((skill) => (
                 <span
                   key={skill}
                   className="px-3 py-1.5 rounded-lg bg-muted text-foreground text-sm font-mono border border-border hover:border-primary/40 transition-colors"
@@ -106,21 +97,26 @@ export default function About() {
 
             {/* Botões */}
             <div className="flex flex-wrap gap-3 mt-2">
-              <a
-                href="#portfolio"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-semibold text-sm transition-all shadow-lg shadow-primary/20"
-              >
-                Ver Projetos
-                <ArrowRight size={16} />
-              </a>
-              <a
-                href="/cv-carlos-resende.pdf"
-                download
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full border border-border text-foreground hover:border-primary/50 hover:text-primary font-semibold text-sm transition-all"
-              >
-                <Download size={16} />
-                Download CV
-              </a>
+              <Button variant='default' className='inline-flex items-center gap-2 px-6 py-5 rounded-full bg-primary hover:bg-accent hover:shadow-sm hover:shadow-accent/20 text-white font-semibold text-sm transition-all'>
+                <a
+                  href="#portfolio"
+                  className="flex items-center gap-2 "
+                >
+                  Ver Projetos
+                  <ArrowRight size={16} />
+                </a>
+              </Button>
+              
+              <Button variant='outline' className='inline-flex items-center gap-2 px-6 py-5 rounded-full border border-border text-foreground hover:border-accent hover:text-accent font-semibold text-sm transition-all'>
+                <a
+                  href="/cv-carlos-resende.pdf"
+                  download
+                  className="flex items-center gap-2 "
+                >
+                  <Download size={16} />
+                  Download CV
+                </a>
+              </Button>
             </div>
           </motion.div>
         </div>

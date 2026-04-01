@@ -75,7 +75,7 @@ export const Header = () => {
                   href={link.href}
                   className={cn(
                     navigationMenuTriggerStyle(),
-                    'text-muted-foreground hover:text-foreground text-xs font-medium bg-transparent hover:bg-muted/50 h-8 px-3'
+                    'text-muted-foreground hover:text-foreground text-xs font-medium bg-transparent hover:bg-accent/20 h-8 px-3'
                   )}
                 >
                   {link.name}
@@ -90,7 +90,7 @@ export const Header = () => {
           <Button
             asChild
             size="sm"
-            className="hidden sm:inline-flex bg-primary hover:bg-primary/90 text-white rounded-full px-5 shadow-lg shadow-primary/20 font-semibold text-xs"
+            className="hidden sm:inline-flex bg-primary hover:bg-accent text-white rounded-full px-5 shadow-lg shadow-primary/20 font-semibold text-xs"
           >
             <a href="#contact">Iniciar Projeto</a>
           </Button>
@@ -134,7 +134,7 @@ export const Header = () => {
                 <Separator className="my-4" />
 
                 <SheetClose asChild>
-                  <Button asChild className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl font-semibold">
+                  <Button asChild className="w-full bg-primary hover:bg-accent hover:text-accent text-white rounded-xl font-semibold">
                     <a href="#contact">Iniciar Projeto →</a>
                   </Button>
                 </SheetClose>

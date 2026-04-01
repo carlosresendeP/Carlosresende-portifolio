@@ -17,15 +17,44 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
+import {
+  Field,
+  FieldLabel,
+  FieldError,
+  FieldGroup,
+} from '@/components/ui/field'
 import { toast } from 'sonner'
 import { SocialLink } from '@/types/sociaTypes'
+import { z } from 'zod'
 
 interface FormState {
   name: string
   email: string
   subject: string
   message: string
+  phone: string
 }
+
+interface FormErrors {
+  name?: string
+  email?: string
+  message?: string
+  phone?: string
+}
+
+const contactSchema = z.object({
+  name: z.string().min(3, 'Nome deve ter pelo menos 3 caracteres'),
+  email: z.string().email('E-mail inválido'),
+  subject: z.string(),
+  message: z.string().min(10, 'Mensagem deve ter pelo menos 10 caracteres'),
+  phone: z
+    .string()
+    .refine((v) => v === '' || v.replace(/\D/g, '').length >= 10, {
+      message: 'Telefone inválido',
+    })
+    .optional()
+    .default(''),
+})
 
 export default function Contact() {
 
@@ -36,31 +65,63 @@ export default function Contact() {
     { icon: FaWhatsapp, href: 'https://wa.me/5532998283189', label: 'WhatsApp' },
   ]
 
-  const [form, setForm] = useState<FormState>({ name: '', email: '', subject: 'Landing Page', message: '' })
+  const [form, setForm] = useState<FormState>({ name: '', email: '', subject: 'Landing Page', message: '', phone: '' })
+  const [errors, setErrors] = useState<FormErrors>({})
   const [loading, setLoading] = useState(false)
   const [successOpen, setSuccessOpen] = useState(false)
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    const { name, value } = e.target
+    setForm((prev) => ({ ...prev, [name]: value }))
+    if (errors[name as keyof FormErrors]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }))
+    }
+  }
+
+  function validate(): FormErrors {
+    const result = contactSchema.safeParse(form)
+    if (result.success) return {}
+
+    return result.error.issues.reduce<FormErrors>((acc, issue) => {
+      const field = issue.path[0] as keyof FormErrors
+      if (!acc[field]) acc[field] = issue.message
+      return acc
+    }, {})
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!form.name || !form.email || !form.message) {
-      toast.error('Por favor, preencha todos os campos obrigatórios.')
+
+    const validationErrors = validate()
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
       return
     }
 
     setLoading(true)
-    // Simula envio (troque por fetch real quando a API estiver pronta)
-    await new Promise((res) => setTimeout(res, 1200))
-    setLoading(false)
-    setSuccessOpen(true)
-    setForm({ name: '', email: '', subject: 'Landing Page', message: '' })
+    try {
+      const response = await fetch('/api/solicitation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+
+      if (!response.ok) {
+        throw new Error('Falha ao enviar mensagem.')
+      }
+
+      setSuccessOpen(true)
+      setForm({ name: '', email: '', subject: 'Landing Page', message: '', phone: '' })
+      setErrors({})
+    } catch {
+      toast.error('Erro ao enviar mensagem. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    <section id="contact" className="py-24 bg-muted/10 relative overflow-hidden">
+    <section id="contact" className="py-24 bg-white relative overflow-hidden">
       <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
       <div className="container mx-auto px-6 relative z-10">
@@ -142,87 +203,112 @@ export default function Contact() {
           >
             <Card className="border-border shadow-2xl shadow-primary/5 rounded-3xl">
               <CardContent className="p-8">
-                <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                  <div className="grid md:grid-cols-2 gap-5">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
-                        Nome *
-                      </label>
-                      <Input
-                        name="name"
-                        value={form.name}
-                        onChange={handleChange}
-                        placeholder="Seu nome"
-                        required
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
-                        E-mail *
-                      </label>
-                      <Input
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="seu@email.com"
-                        required
-                      />
-                    </div>
-                  </div>
+                <form onSubmit={handleSubmit} noValidate>
+                  <FieldGroup className="gap-5">
+                    <div className="grid md:grid-cols-2 gap-5">
+                      <Field data-invalid={!!errors.name}>
+                        <FieldLabel htmlFor="name" className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
+                          Nome *
+                        </FieldLabel>
+                        <Input
+                          id="name"
+                          name="name"
+                          value={form.name}
+                          onChange={handleChange}
+                          placeholder="Seu nome"
+                          aria-invalid={!!errors.name}
+                        />
+                        <FieldError>{errors.name}</FieldError>
+                      </Field>
 
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
-                      Assunto
-                    </label>
-                    <select
-                      name="subject"
-                      value={form.subject}
-                      onChange={handleChange}
-                      className="w-full px-3 py-2 rounded-lg bg-background border border-input focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm text-foreground"
+                      <Field data-invalid={!!errors.email}>
+                        <FieldLabel htmlFor="email" className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
+                          E-mail *
+                        </FieldLabel>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={form.email}
+                          onChange={handleChange}
+                          placeholder="seu@email.com"
+                          aria-invalid={!!errors.email}
+                        />
+                        <FieldError>{errors.email}</FieldError>
+                      </Field>
+                    </div>
+
+                    <Field>
+                      <FieldLabel htmlFor="phone" className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
+                        Telefone
+                      </FieldLabel>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        value={form.phone}
+                        onChange={handleChange}
+                        placeholder="Seu telefone"
+                        aria-invalid={!!errors.phone}
+                      />
+                      <FieldError>{errors.phone}</FieldError> 
+                    </Field>
+
+                    <Field>
+                      <FieldLabel htmlFor="subject" className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
+                        Assunto
+                      </FieldLabel>
+                      <select
+                        id="subject"
+                        name="subject"
+                        value={form.subject}
+                        onChange={handleChange}
+                        className="w-full px-3 py-2 rounded-lg bg-background border border-input focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm text-foreground"
+                      >
+                        <option value="Landing Page">Landing page</option>
+                        <option value="Business Pro">Site Institucional</option>
+                        <option value="SaaS Customizado">Sistema com IA</option>
+                        <option value="Automação com IA">SaaS Customizado</option>
+                        <option value="Outro">Outro</option>
+                      </select>
+                    </Field>
+
+                    <Field data-invalid={!!errors.message}>
+                      <FieldLabel htmlFor="message" className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
+                        Mensagem *
+                      </FieldLabel>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        value={form.message}
+                        onChange={handleChange}
+                        placeholder="Descreva seu projeto..."
+                        rows={4}
+                        aria-invalid={!!errors.message}
+                      />
+                      <FieldError>{errors.message}</FieldError>
+                    </Field>
+
+                    <Button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl font-bold gap-2 py-6"
                     >
-                      <option value="Landing Page">Landing page</option>
-                      <option value="Business Pro">Site Institucional</option>
-                      <option value="SaaS Customizado">Sistema com IA</option>
-                      <option value="Automação com IA">SaaS Customizado</option>
-                      <option value="Outro">Outro</option>
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-mono text-muted-foreground uppercase tracking-widest">
-                      Mensagem *
-                    </label>
-                    <Textarea
-                      name="message"
-                      value={form.message}
-                      onChange={handleChange}
-                      placeholder="Descreva seu projeto..."
-                      rows={4}
-                      required
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-primary hover:bg-primary/90 text-white rounded-xl font-bold gap-2 py-6"
-                  >
-                    {loading ? (
-                      <span className="flex items-center gap-2">
-                        <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                        </svg>
-                        Enviando...
-                      </span>
-                    ) : (
-                      <>
-                        Enviar Mensagem
-                        <Send size={16} />
-                      </>
-                    )}
-                  </Button>
+                      {loading ? (
+                        <span className="flex items-center gap-2">
+                          <svg className="animate-spin size-4" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Enviando...
+                        </span>
+                      ) : (
+                        <>
+                          Enviar Mensagem
+                          <Send size={16} />
+                        </>
+                      )}
+                    </Button>
+                  </FieldGroup>
                 </form>
               </CardContent>
             </Card>

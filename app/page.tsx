@@ -13,6 +13,7 @@ import FAQ from '@/components/FAQ'
 import CTA from '@/components/CTA'
 import Contact from '@/components/Contact'
 import { Footer } from '@/components/Footer'
+import { Chatbot } from '@/components/Chatbot'
 
 export default function Home() {
   return (
@@ -31,6 +32,7 @@ export default function Home() {
         <FAQ />
         <CTA />
         <Contact />
+        <Chatbot />
       </main>
       <Footer />
     </>
