@@ -192,7 +192,7 @@ export default function ColorBends({
     renderer.domElement.style.display = 'block'
     container.appendChild(renderer.domElement)
 
-    const clock = new THREE.Clock()
+    const clock = new THREE.Timer()
 
     const handleResize = () => {
       const w = container.clientWidth || 1
@@ -211,10 +211,11 @@ export default function ColorBends({
     }
 
     const loop = () => {
+      clock.update()
       const dt = clock.getDelta()
-      material.uniforms.uTime.value = clock.elapsedTime
+      material.uniforms.uTime.value = clock.getElapsed()
 
-      const deg = (rotationRef.current % 360) + autoRotateRef.current * clock.elapsedTime
+      const deg = (rotationRef.current % 360) + autoRotateRef.current * clock.getElapsed()
       const rad = (deg * Math.PI) / 180
       material.uniforms.uRot.value.set(Math.cos(rad), Math.sin(rad))
 

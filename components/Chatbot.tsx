@@ -1,122 +1,182 @@
-'use client';
+'use client'
 
-import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { X, Send, Terminal } from 'lucide-react';
-import { GoogleGenAI } from "@google/genai";
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useState, useRef, useEffect } from 'react'
+import { motion, AnimatePresence } from 'motion/react'
+import { X, Send, MessageCircle, Bot } from 'lucide-react'
+import { FaWhatsapp } from 'react-icons/fa'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+
+interface Message {
+  role: 'user' | 'bot'
+  text: string
+}
+
+const INITIAL_MESSAGE: Message = {
+  role: 'bot',
+  text: 'Olá! Sou o assistente do Carlos Resende. Como posso te ajudar hoje? 👋',
+}
 
 export const Chatbot = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { role: 'bot', text: 'SISTEMA_INICIALIZADO: Sou o assistente terminal do Carlos.Resende. Como posso ajudar você a construir seu próximo projeto?' }
-  ]);
-  const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE])
+  const [input, setInput] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const sessionId = useRef<string>(crypto.randomUUID())
 
   useEffect(() => {
     if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
-  }, [messages, isTyping]);
+  }, [messages, isTyping])
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 300)
+    }
+  }, [isOpen])
 
-    const userMsg = { role: 'user', text: input };
-    setMessages(prev => [...prev, userMsg]);
-    setInput('');
-    setIsTyping(true);
+  async function handleSend() {
+    const text = input.trim()
+    if (!text || isTyping) return
+
+    setMessages((prev) => [...prev, { role: 'user', text }])
+    setInput('')
+    setIsTyping(true)
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const response = await ai.models.generateContent({
-        model: "gemini-3-flash-preview",
-        contents: [
-          { role: 'user', parts: [{ text: `Você é o assistente terminal do Carlos Resende, um Desenvolvedor Fullstack. Seu objetivo é ajudar o Carlos a VENDER seus serviços. Seja técnico, autoritário, mas prestativo. Mencione que o Carlos constrói sites de alta performance que geram resultados. O usuário perguntou: ${input}` }] }
-        ],
-        config: {
-          systemInstruction: "Fale como um assistente de terminal técnico. Use frases curtas, termos técnicos e foque em vender a expertise do Carlos."
-        }
-      });
+      const response = await fetch('/api/chatbot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, sessionId: sessionId.current }),
+      })
 
-      const botMsg = { role: 'bot', text: response.text || "ERRO: CONEXÃO_INTERROMPIDA" };
-      setMessages(prev => [...prev, botMsg]);
-    } catch (error) {
-      console.error(error);
-      setMessages(prev => [...prev, { role: 'bot', text: "ERRO: SISTEMA_OFFLINE. Por favor, use o formulário de contato." }]);
+      if (!response.ok) throw new Error('Webhook error')
+
+      const data = await response.json()
+      const botText =
+        data?.text ||
+        data?.message ||
+        data?.output ||
+        (typeof data === 'string' ? data : null) ||
+        'Recebi sua mensagem!'
+
+      setMessages((prev) => [...prev, { role: 'bot', text: botText }])
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'bot',
+          text: 'Estou enfrentando problemas, tente pelo WhatsApp 👇',
+        },
+      ])
     } finally {
-      setIsTyping(false);
+      setIsTyping(false)
     }
-  };
+  }
 
   return (
-    <div className="fixed bottom-10 left-10 z-1000">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: 20, scale: 0.9, transformOrigin: 'bottom left' }}
+            initial={{ opacity: 0, y: 16, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            className="terminal-window w-[350px] h-[500px] mb-6 flex flex-col shadow-accent/10"
+            exit={{ opacity: 0, y: 16, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            className="w-[360px] h-[520px] bg-background border border-border rounded-2xl shadow-2xl shadow-black/20 flex flex-col overflow-hidden"
           >
             {/* Header */}
-            <div className="bg-border/50 px-4 py-2 flex items-center justify-between border-b border-border">
-              <div className="flex items-center gap-2">
-                <Terminal size={14} className="text-accent" />
-                <span className="mono text-[9px] opacity-50">console_dev — assistente</span>
+            <div className="bg-primary px-4 py-3 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-3">
+                <div className="size-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <Bot size={16} className="text-white" />
+                </div>
+                <div>
+                  <p className="text-white text-sm font-semibold leading-none">Assistente</p>
+                  <p className="text-white/70 text-xs mt-0.5">Carlos Resende</p>
+                </div>
               </div>
               <Button
-                size="icon-sm"
+                size="icon"
                 variant="ghost"
                 onClick={() => setIsOpen(false)}
-                className="text-muted hover:text-accent hover:bg-transparent"
+                className="text-white/70 hover:text-white hover:bg-white/10 size-8"
               >
                 <X size={16} />
               </Button>
             </div>
 
             {/* Messages */}
-            <div ref={scrollRef} className="flex-1 overflow-y-auto p-6 space-y-6 font-mono text-xs">
+            <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
               {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] p-3 border ${
-                    msg.role === 'user'
-                      ? 'border-accent text-accent bg-accent/5'
-                      : 'border-border text-text bg-surface'
-                  }`}>
-                    <span className="opacity-50 mr-2">{msg.role === 'user' ? '>' : '$'}</span>
+                <div
+                  key={i}
+                  className={`flex gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  {msg.role === 'bot' && (
+                    <div className="size-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-0.5">
+                      <Bot size={13} className="text-primary" />
+                    </div>
+                  )}
+                  <div
+                    className={`max-w-[78%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                      msg.role === 'user'
+                        ? 'bg-primary text-white rounded-br-sm'
+                        : 'bg-muted text-foreground rounded-bl-sm'
+                    }`}
+                  >
                     {msg.text}
+                    {msg.text.includes('WhatsApp') && msg.role === 'bot' && (
+                      <a
+                        href="https://wa.me/5532998283189"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 flex items-center gap-1.5 text-xs font-medium text-green-600 hover:text-green-500 transition-colors"
+                      >
+                        <FaWhatsapp size={13} />
+                        Abrir WhatsApp
+                      </a>
+                    )}
                   </div>
                 </div>
               ))}
+
               {isTyping && (
-                <div className="flex justify-start">
-                  <div className="text-accent animate-pulse">_ DIGITANDO...</div>
+                <div className="flex gap-2 justify-start">
+                  <div className="size-7 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                    <Bot size={13} className="text-primary" />
+                  </div>
+                  <div className="bg-muted px-4 py-3 rounded-2xl rounded-bl-sm flex items-center gap-1">
+                    <span className="size-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:0ms]" />
+                    <span className="size-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:150ms]" />
+                    <span className="size-1.5 bg-muted-foreground/50 rounded-full animate-bounce [animation-delay:300ms]" />
+                  </div>
                 </div>
               )}
             </div>
 
             {/* Input */}
-            <div className="p-4 border-t border-border bg-surface">
-              <div className="flex items-center gap-2">
-                <span className="text-accent mono shrink-0">{'>'}</span>
+            <div className="p-3 border-t border-border bg-background shrink-0">
+              <div className="flex items-center justify-center gap-2 bg-muted rounded-xl px-3 py-1.5">
                 <Input
+                  ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                  placeholder="Digite um comando..."
-                  className="bg-transparent border-none shadow-none outline-none focus-visible:ring-0 focus-visible:border-none font-mono text-xs text-accent placeholder:text-muted/50 px-0 h-auto py-1"
+                  placeholder="Escreva uma mensagem..."
+                  disabled={isTyping}
+                  className="bg-transparent border-none shadow-none focus-visible:ring-0 px-2 h-8 text-sm placeholder:text-muted-foreground/60"
                 />
                 <Button
-                  size="icon-sm"
-                  variant="ghost"
+                  size="icon"
                   onClick={handleSend}
-                  className="shrink-0 text-accent hover:text-white hover:bg-transparent"
+                  disabled={!input.trim() || isTyping}
+                  className="size-7 shrink-0 bg-primary hover:bg-primary/90 rounded-lg"
                 >
-                  <Send size={16} />
+                  <Send size={13} />
                 </Button>
               </div>
             </div>
@@ -124,12 +184,43 @@ export const Chatbot = () => {
         )}
       </AnimatePresence>
 
-      <button
+      {/* Toggle button */}
+      <motion.button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-16 h-16 rounded-lg bg-surface border border-border shadow-2xl flex items-center justify-center text-accent hover:border-accent hover:scale-105 active:scale-95 transition-all group"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        className="size-14 rounded-full bg-primary shadow-lg shadow-primary/30 flex items-center justify-center text-white relative"
+        aria-label="Abrir chat"
       >
-        <Terminal size={24} className="group-hover:rotate-12 transition-transform" />
-      </button>
+        <AnimatePresence mode="wait">
+          {isOpen ? (
+            <motion.span
+              key="close"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <X size={22} />
+            </motion.span>
+          ) : (
+            <motion.span
+              key="open"
+              initial={{ rotate: 90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: -90, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <MessageCircle size={22} />
+            </motion.span>
+          )}
+        </AnimatePresence>
+
+        {/* Unread dot */}
+        {!isOpen && (
+          <span className="absolute top-0.5 right-0.5 size-3 bg-green-500 rounded-full border-2 border-background" />
+        )}
+      </motion.button>
     </div>
-  );
-};
+  )
+}
