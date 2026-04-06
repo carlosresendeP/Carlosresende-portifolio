@@ -5,26 +5,15 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { ArrowRight, Mail, ChevronDown } from 'lucide-react'
 import BlurText from '@/components/BlurText'
-import ColorBends from '@/components/color-bends/ColorBends'
+import PixelSnow from '@/components/PixelSnow'
 
 const ROLES = [
   'Desenvolvedor Full Stack',
   'Desenvolvedor Front-End',
-  'Desenvolvedor Back-End',
-  'Criador de Experiências Web',
+  'Desenvolvedor web'
 ] as const
 
 const ROLE_INTERVAL_MS = 4000
-
-// Cores alinhadas com o design system do portfólio (primary, secondary, tertiary)
-const HERO_COLORS = [
-  '#09090b', // --background (zinc-950)
-  '#064e3b', // emerald-900 (Verde escuro profundo)
-  '#059669', // --primary (emerald-600)
-  '#10b981', // --secondary (emerald-500 / mint)
-  '#047857', // --tertiary (emerald-700)
-  '#022c22', // emerald-950 (Sombra verde quase preta)
-]
 
 export default function Hero() {
   const [roleIndex, setRoleIndex] = useState(0)
@@ -41,18 +30,14 @@ export default function Hero() {
 
       {/* Background WebGL animado */}
       <div className="absolute inset-0 top-0">
-        <ColorBends
-          colors={HERO_COLORS}
-          speed={0.2}
-          scale={1.5}
-          autoRotate={0}
-          warpStrength={1}
-          frequency={1.4}
-          mouseInfluence={0.6}
-          parallax={0.5}
-          noise={0.014}
-          transparent={false}
-          rotation={100}
+        <PixelSnow
+          color="#c8cecd"
+          variant="snowflake"
+          density={0.25}
+          speed={1.25}
+          brightness={1.2}
+          flakeSize={0.015}
+          pixelResolution={500}
         />
       </div>
 
@@ -100,7 +85,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
               transition={{ duration: 0.4, ease: 'easeInOut' }}
-              className="text-xl md:text-2xl font-medium text-primary-foreground"
+              className="text-xl md:text-2xl font-medium text-foreground"
             >
               {ROLES[roleIndex]}
             </motion.span>
