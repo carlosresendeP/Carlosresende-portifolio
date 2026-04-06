@@ -70,16 +70,14 @@ export default function About() {
               <span className="text-xs font-mono text-primary uppercase tracking-wider">Sobre mim</span>
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground leading-tight">
-              Criando soluções digitais que <span className="text-primary">impactam</span>.
-            </h2>
+
 
             <div className="space-y-4 text-muted-foreground text-lg leading-relaxed">
               <p>
-                Olá! Sou o Carlos, desenvolvedor full-stack apaixonado por transformar interfaces simples e intuitivas. Foco em performance, escalabilidade e experiência do usuário.
+                Sou Carlos Resende, desenvolvedor full-stack com experiência em construir aplicações web modernas — do banco de dados à interface. Trabalho com foco em performance, arquitetura limpa e entrega de valor real.
               </p>
               <p>
-                Minha jornada começou com curiosidade sobre como a web funciona. Hoje construo aplicações robustas com o ecossistema moderno de JavaScript, do front-end ao back-end.
+                Domino o ecossistema JavaScript/TypeScript de ponta a ponta, combinando React e Next.js no front-end com Node.js e bancos de dados relacionais e não-relacionais no back-end. Integro ferramentas de IA para entregar soluções mais inteligentes e eficientes.
               </p>
             </div>
 

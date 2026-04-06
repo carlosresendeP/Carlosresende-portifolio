@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
-
-
-const WEBHOOK_URL = process.env.WEBHOOK_RES_URL;
+import { env } from "@/lib/env";
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const response = await fetch(WEBHOOK_URL!, {
+        const response = await fetch(env.WEBHOOK_RES_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

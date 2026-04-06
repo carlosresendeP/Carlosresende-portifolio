@@ -1,7 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-@import "shadcn/tailwind.css";
-
 
 @theme inline {
   --color-background: var(--background);
@@ -45,7 +43,7 @@
 }
 
 /*
-  Cores baseadas no design system do portfólio devcarlosresende.com.br
+  Cores baseadas no novo tema verde para devcarlosresende.com.br
   O site é sempre dark — :root já usa o tema escuro.
 */
 :root {
@@ -55,19 +53,22 @@
   --card: oklch(0.145 0.003 286);            /* zinc-900  #18181b */
   --card-foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.546 0.245 264);         /* blue-600  #2563eb */
+  /* Emerald Green - Substituindo o Blue-600 */
+  --primary: oklch(0.64 0.17 165); 
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.685 0.169 237);       /* sky-500   #0ea5e9 */
-  --secondary-foreground: oklch(1 0 0);
+  /* Mint/Teal - Substituindo o Sky-500 */
+  --secondary: oklch(0.78 0.13 174);
+  --secondary-foreground: oklch(0.082 0.003 286);
 
-  --tertiary: oklch(0.511 0.262 277);        /* indigo-600 #4f46e5 */
+  /* Deep Forest Green - Substituindo o Indigo-600 */
+  --tertiary: oklch(0.48 0.14 152);
   --tertiary-foreground: oklch(1 0 0);
 
   --muted: oklch(0.22 0 0);                  /* zinc-800  #27272a */
   --muted-foreground: oklch(0.556 0 0);      /* zinc-500  #71717a */
 
-  --accent: oklch(78.22% 0.23033 147.36 / 0.63);           /* yellow-500 #eab308 */
+  --accent: oklch(87.643% 0.25261 145.277);            /* Light green accent */
   --accent-foreground: oklch(0.082 0 0);
 
   --destructive: oklch(0.577 0.245 27.325);  /* red-600 */
@@ -75,12 +76,11 @@
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.546 0.245 264);            /* blue-600 */
+  --ring: oklch(0.64 0.17 165);              /* Verde primário */
 
   --radius: 0.625rem;
 }
 
-/* Mantido para compatibilidade com componentes shadcn que esperam .dark */
 .dark {
   --background: oklch(0.082 0.003 286);
   --foreground: oklch(0.985 0 0);
@@ -88,19 +88,19 @@
   --card: oklch(0.145 0.003 286);
   --card-foreground: oklch(0.985 0 0);
 
-  --primary: oklch(0.546 0.245 264);
+  --primary: oklch(0.64 0.17 165);
   --primary-foreground: oklch(1 0 0);
 
-  --secondary: oklch(0.685 0.169 237);
-  --secondary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.78 0.13 174);
+  --secondary-foreground: oklch(0.082 0.003 286);
 
-  --tertiary: oklch(0.511 0.262 277);
+  --tertiary: oklch(0.48 0.14 152);
   --tertiary-foreground: oklch(1 0 0);
 
   --muted: oklch(0.22 0 0);
   --muted-foreground: oklch(0.556 0 0);
 
-  --accent: oklch(0.795 0.184 86);
+  --accent: oklch(0.86 0.11 155);
   --accent-foreground: oklch(0.082 0 0);
 
   --destructive: oklch(0.704 0.191 22.216);
@@ -108,7 +108,7 @@
 
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.546 0.245 264);
+  --ring: oklch(0.64 0.17 165);
 }
 
 @layer base {
@@ -124,7 +124,6 @@
   }
 }
 
-/* Smooth scroll global */
 html {
   scroll-behavior: smooth;
 }
@@ -133,7 +132,6 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* ColorBends container */
 .color-bends-container {
   position: relative;
   width: 100%;
@@ -141,7 +139,6 @@ body {
   overflow: hidden;
 }
 
-/* Hero: grid de fundo */
 .hero-grid-bg {
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
@@ -149,7 +146,6 @@ body {
   background-size: 60px 60px;
 }
 
-/* Hero: animação de entrada */
 @keyframes fade-in-up {
   from {
     opacity: 0;

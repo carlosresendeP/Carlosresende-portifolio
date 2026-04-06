@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
+import { env } from "@/lib/env";
 
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-        const response = await fetch(process.env.WEBHOOK_CHAT_URL!, {
+        const response = await fetch(env.WEBHOOK_CHAT_URL, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

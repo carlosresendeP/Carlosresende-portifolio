@@ -48,13 +48,13 @@ export const Header = () => {
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: 'easeOut' }}
       className={cn(
-        'fixed w-[80%] top-3 left-1/2 -translate-x-1/2 z-50 py-3 px-2 rounded-full transition-all duration-300',
+        'fixed w-[80%] top-3 left-1/2 -translate-x-1/2 z-50 py-3 px-2 rounded-full shadow-lg  transition-all duration-300',
         isScrolled
           ? 'bg-card/30 backdrop-blur-xl shadow-lg shadow-primary/20'
           : 'py-5 bg-card shadow-primary/10'
       )}
     >
-      <div className="container mx-auto px-6 flex items-center justify-between gap-6">
+      <div className="w-full max-w-3xl mx-auto flex items-center justify-center gap-6">
         {/* Logo */}
         <a href="#" className="flex items-center gap-2 group shrink-0">
           <Terminal size={22} className="text-primary group-hover:rotate-12 transition-transform duration-300" />

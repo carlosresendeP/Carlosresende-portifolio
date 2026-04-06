@@ -19,11 +19,11 @@ const ROLE_INTERVAL_MS = 4000
 // Cores alinhadas com o design system do portfólio (primary, secondary, tertiary)
 const HERO_COLORS = [
   '#09090b', // --background (zinc-950)
-  '#1e3a8a', // blue-900
-  '#2563eb', // --primary (blue-600)
-  '#0ea5e9', // --secondary (sky-500)
-  '#4f46e5', // --tertiary (indigo-600)
-  '#172554', // blue-950
+  '#064e3b', // emerald-900 (Verde escuro profundo)
+  '#059669', // --primary (emerald-600)
+  '#10b981', // --secondary (emerald-500 / mint)
+  '#047857', // --tertiary (emerald-700)
+  '#022c22', // emerald-950 (Sombra verde quase preta)
 ]
 
 export default function Hero() {
@@ -37,7 +37,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-background ">
 
       {/* Background WebGL animado */}
       <div className="absolute inset-0 top-0">
@@ -100,7 +100,7 @@ export default function Hero() {
               animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               exit={{ opacity: 0, y: -10, filter: 'blur(6px)' }}
               transition={{ duration: 0.4, ease: 'easeInOut' }}
-              className="text-xl md:text-2xl font-medium text-secondary-foreground/90"
+              className="text-xl md:text-2xl font-medium text-primary-foreground"
             >
               {ROLES[roleIndex]}
             </motion.span>
@@ -133,7 +133,7 @@ export default function Hero() {
         >
           <Button
             size="lg"
-            className="w-full sm:w-auto gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 rounded-full transition-colors"
+            className="w-full sm:w-auto gap-2 bg-primary hover:bg-accent/80 hover:shadow-md  text-primary-foreground font-semibold px-8 rounded-full transition-colors"
           >
             Começar um projeto
             <ArrowRight className="size-4" />
@@ -155,11 +155,16 @@ export default function Hero() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.3, duration: 0.6 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col mb-3 items-center gap-1.5"
       >
         <span className="text-xs text-muted-foreground uppercase tracking-[0.2em]">scroll</span>
         <ChevronDown className="size-4 text-muted-foreground animate-bounce" />
       </motion.div>
+
+      <div className='bg-linear-to-b from-transparent to-background z-10  absolute bottom-0 h-14 w-full'>
+        
+      </div>
+
 
     </section>
   )
